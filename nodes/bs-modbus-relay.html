@@ -1,0 +1,57 @@
+
+
+<script type="text/x-red" data-template-name="BS Modbus N4D8 Relay">
+    <div class="form-row">
+        <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+    <div class="form-row">
+        <label for="node-input-pollInterval"><i class="fa fa-tag"></i> pollInterval</label>
+        <input type="number" id="node-input-pollInterval">
+    </div>
+    <div class="form-row">
+        <label for="node-input-boardAddress"><i class="fa fa-tag"></i> Relay Board Address</label>
+        <input type="number" id="node-input-boardAddress">
+    </div>
+    <div class="form-row">
+        <label for="node-input-modbusInterface">Modbus Interface</label>
+        <input type="text" id="node-input-modbusInterface" >
+    </div>
+    <div class="form-row">
+        <label for="node-input-numberOfInputs">Number of Inputs</label>
+        <input type="number" id="node-input-numberOfInputs" >
+    </div>
+
+</script>
+
+
+<script type="text/x-red" data-help-name="BS Modbus N4D8 Relay">
+    <p>pending</p>
+</script>
+
+
+
+<script type="text/javascript">
+    RED.nodes.registerType('BS Modbus N4D8 Relay',{
+        category: 'bsrelay',      // the palette category
+        color:"#FFFFFF",
+        defaults: {
+            name: {},
+            pollInterval: {value:1000},
+            boardAddress: {value: 1},
+            numberOfInputs: {value: 12},
+            modbusInterface: {value:"", type:"bs-modbus-interface"},
+        },
+        inputs:1,               // set the number of inputs - only 0 or 1
+        outputs:1,              // set the number of outputs - 0 to n
+        icon: "favicon.png",     // saved in  icons/myicon.png
+        label: function() {
+            if (this.name) {
+                return this.name;
+            } else {
+                return "Modbus Relay";
+            }
+        },
+
+    });
+</script>
