@@ -34,7 +34,7 @@ class BsRelayHelper {
             this.portIsOpen = true
 
         })
-        this.parser = this.port.pipe(new InterByteTimeoutParser({ interval: 20 }))
+        this.parser = this.port.pipe(new InterByteTimeoutParser({ interval: 25 }))
         this.parser.on('data', (data) => {
             this.handleData(data)
         })
@@ -63,14 +63,30 @@ class BsRelayHelper {
             return;
         }
 
-        //TODO: CRC CHECK?
-console.log(data)
+        let dataPart = data.slice(0, data.length-2)
+        let a = data.slice(data.length-2, data.length)
+        let b = this.makeCRC16(dataPart)
+
+        let crcOK = (a[0] == b[0] && a[1] == b[1])
+
+        let crcMatchText = crcOK ? "CRC-OK" : "CRC-FAILED"
+
+        console.log("Rx ",crcMatchText, data)
+
         let address = data[0]
         //if this is 0x3 and 0x18 then it is a response to input state query
+
+        if(!crcOK){
+            //Do not continue processing bad data, CRC has failed!
+            return
+        }
+
         if(data[1] == 0x3 && data[2] == 0x18){
             let length = data.length - 4
-            return this.handleInputStates(data[0], data.slice(4, length))
+            let responseData = data.slice(4, length)
+            return this.handleInputStates(address, responseData)
         }
+
     }
 
     handleInputStates(address, inputs){
@@ -94,8 +110,7 @@ console.log(data)
         }
         return this.relayBoards[address]
     }
-
-    addModbusCRC(bufferArray) {
+    makeCRC16(bufferArray){
         var crc = 0xFFFF;
         for (var pos = 0; pos < bufferArray.length; pos++) {
             crc ^= bufferArray[pos];
@@ -110,6 +125,10 @@ console.log(data)
         var crcBuffer = new Uint8Array(2)
         crcBuffer[0] = crc & 0xFF
         crcBuffer[1] = crc >> 8
+        return Buffer.from(crcBuffer)
+    }
+    addModbusCRC(bufferArray) {
+        let crcBuffer = this.makeCRC16(bufferArray)
         return Buffer.concat([bufferArray, crcBuffer])
     }
 
@@ -121,9 +140,8 @@ console.log(data)
     sendNext(){
         if(this.buffersPending.length == 0) return
 
-        console.log("sendNext has "+this.buffersPending.length)
-
         let buffer = this.buffersPending.pop()
+        console.log("Tx", buffer)
         this.busy = true
         this.port.write(buffer, (err) => {
             if (err) {
