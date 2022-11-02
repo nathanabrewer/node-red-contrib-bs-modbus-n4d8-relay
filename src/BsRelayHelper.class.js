@@ -34,7 +34,7 @@ class BsRelayHelper {
             this.portIsOpen = true
 
         })
-        this.parser = this.port.pipe(new InterByteTimeoutParser({ interval: 25 }))
+        this.parser = this.port.pipe(new InterByteTimeoutParser({ interval: 40 }))
         this.parser.on('data', (data) => {
             this.handleData(data)
         })
