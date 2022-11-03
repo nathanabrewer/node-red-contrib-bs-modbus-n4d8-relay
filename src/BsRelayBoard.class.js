@@ -109,6 +109,7 @@ class BsRelayBoard  extends EventEmitter {
                 let eventName = "INPUT"+i+"_CHANGE"
                 let eventValue = data[i]
                 this.emit(eventName, eventValue)
+                this.emit("INPUT_CHANGE", {input:i, value: data[i]})
                 console.log(eventName, eventValue)
             }
         }

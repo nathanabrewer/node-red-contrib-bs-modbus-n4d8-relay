@@ -28,6 +28,11 @@ module.exports = function(RED) {
             })
         })
 
+        board.on("INPUT_CHANGE", (data) => {
+            node.send(data)
+        })
+
+
 
         //Actual Input
         this.on('input', function (msg) {
