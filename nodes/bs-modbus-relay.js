@@ -21,8 +21,8 @@ module.exports = function(RED) {
         let numberOfInputs = parseInt(config.numberOfInputs)
         let board = relayHelper.addBoard(config.boardAddress, pollInterval, numberOfInputs)
 
-        board.onInputUpdate( function(data){
 
+        board.on("INPUT_UPDATE", (data) => {
             node.status({
                 text: data.join(",")
             })

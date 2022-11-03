@@ -1,13 +1,12 @@
-
-class BsRelayBoard {
+const EventEmitter = require('events');
+class BsRelayBoard  extends EventEmitter {
 
     constructor(relayHelper, address, intervalTime, numberOfInputs){
+        super()
         this.relayHelper = relayHelper
         this.numberOfInputs = numberOfInputs
         this.address = address & 0xFF
         this.relay_states = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-        this.inputUpdateCallback = null
-
 
         if(typeof intervalTime !== 'undefined') {
             intervalTime = intervalTime + (20*address)
@@ -100,19 +99,23 @@ class BsRelayBoard {
     }
 
 
-
-    onInputUpdate(callable) {
-        this.inputUpdateCallback = callable
-    }
-
     saveReadRelayStates(data) {
         if(typeof this.numberOfInputs !== 'undefined'){
             data = data.slice(0,this.numberOfInputs)
         }
-        this.relay_states = data
-        if (typeof this.inputUpdateCallback === 'function') {
-            this.inputUpdateCallback(data)
+
+        for(let i = 0; i < this.numberOfInputs; i++){
+            if(this.relay_states[i] != data[i]){
+                let eventName = "INPUT"+i+"_CHANGE"
+                let eventValue = data[i]
+                this.emit(eventName, eventValue)
+                console.log(eventName, eventValue)
+            }
         }
+
+        this.relay_states = data
+        this.emit("INPUT_UPDATE", data)
+
     }
 
 }
