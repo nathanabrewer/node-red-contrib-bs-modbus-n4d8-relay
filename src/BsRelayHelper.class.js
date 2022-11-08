@@ -17,7 +17,9 @@ class BsRelayHelper {
         this.buffersPending = []
 
         this.sendInterval = setInterval( () => {
-            this.sendNext()
+            if(this.portIsOpen) {
+                this.sendNext()
+            }
         }, 30)
 
     }

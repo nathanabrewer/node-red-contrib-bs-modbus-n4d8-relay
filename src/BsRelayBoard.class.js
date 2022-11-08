@@ -76,22 +76,31 @@ class BsRelayBoard  extends EventEmitter {
             this.address,           // address, make sure it fits 0xFF mask
             0x06,                   // Modbus Function 06
             relayAddress & 0xFF,    // address of input to modify
-            0xFD, 0xFD
+            0x00, 0xFD
         ]
         switch (mode) {
             case 'none':
                 request.push(0x00)
+                request.push(0x00)
                 break;
             case 'toggle':
+                request.push(0x00)
                 request.push(0x01)
                 break;
             case 'lockout':
+                request.push(0x00)
                 request.push(0x02)
                 break;
             case 'momentary':
+                request.push(0x00)
                 request.push(0x03)
                 break;
+            case 'interlock-2':
+                request.push(0x00)
+                request.push(0x04)
+                break;
             default:
+                request.push(0x00)
                 request.push(0x00)
         }
         var buffer = Buffer.from(request);
