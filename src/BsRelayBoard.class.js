@@ -71,23 +71,22 @@ class BsRelayBoard  extends EventEmitter {
         return this.sendWithCrc(buffer)
     }
 
-    setInterlock = function (relayAddress, mode) {
+    setInterlock = function (mode) {
         var request = [
             this.address,           // address, make sure it fits 0xFF mask
             0x06,                   // Modbus Function 06
-            relayAddress & 0xFF,    // address of input to modify
             0x00, 0xFD
         ]
         switch (mode) {
-            case 'none':
+            case 'unrelated':
                 request.push(0x00)
                 request.push(0x00)
                 break;
-            case 'toggle':
+            case 'self':
                 request.push(0x00)
                 request.push(0x01)
                 break;
-            case 'lockout':
+            case 'interlocking':
                 request.push(0x00)
                 request.push(0x02)
                 break;

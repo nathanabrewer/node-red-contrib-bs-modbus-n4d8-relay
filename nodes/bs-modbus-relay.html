@@ -23,125 +23,16 @@
     </div>
 
     <div class="form-row">
-        <label for="node-input-inputRelayRelationship0">Input/Relay Relationship 0</label>
-        <select id="node-input-inputRelayRelationship0" >
-            <option value="">DoNotSet</option>
-            <option>none</option>
-            <option>toggle</option>
-            <option>lockout</option>
-            <option>momentary</option>
+        <label for="node-input-inputRelationship">Input/Relay Relationship</label>
+        <select id="node-input-inputRelationship" >
+            <option value="unrelated" >No Relationship</option>
+            <option value="self" >Self-locking (default)</option>
+            <option value="interlocking" >Interlocking</option>
+            <option value="momentary" >Momentary</option>
+            <option value="interlock-2">Interlocking relationship betwen two channels</option>
         </select>
     </div>
-    <div class="form-row">
-        <label for="node-input-inputRelayRelationship1">Input/Relay Relationship 1</label>
-        <select id="node-input-inputRelayRelationship1" >
-            <option value="">DoNotSet</option>
-            <option>none</option>
-            <option>toggle</option>
-            <option>lockout</option>
-            <option>momentary</option>
-        </select>
-    </div>
-    <div class="form-row">
-        <label for="node-input-inputRelayRelationship2">Input/Relay Relationship 2</label>
-        <select id="node-input-inputRelayRelationship2" >
-            <option value="">DoNotSet</option>
-            <option>none</option>
-            <option>toggle</option>
-            <option>lockout</option>
-            <option>momentary</option>
-        </select>
-    </div>
-    <div class="form-row">
-        <label for="node-input-inputRelayRelationship3">Input/Relay Relationship 3</label>
-        <select id="node-input-inputRelayRelationship3" >
-            <option value="">DoNotSet</option>
-            <option>none</option>
-            <option>toggle</option>
-            <option>lockout</option>
-            <option>momentary</option>
-        </select>
-    </div>
-    <div class="form-row">
-        <label for="node-input-inputRelayRelationship4">Input/Relay Relationship 4</label>
-        <select id="node-input-inputRelayRelationship4" >
-            <option value="">DoNotSet</option>
-            <option>none</option>
-            <option>toggle</option>
-            <option>lockout</option>
-            <option>momentary</option>
-        </select>
-    </div>
-    <div class="form-row">
-        <label for="node-input-inputRelayRelationship5">Input/Relay Relationship 5</label>
-        <select id="node-input-inputRelayRelationship5" >
-            <option value="">DoNotSet</option>
-            <option>none</option>
-            <option>toggle</option>
-            <option>lockout</option>
-            <option>momentary</option>
-        </select>
-    </div>
-    <div class="form-row">
-        <label for="node-input-inputRelayRelationship6">Input/Relay Relationship 6</label>
-        <select id="node-input-inputRelayRelationship6" >
-            <option value="">DoNotSet</option>
-            <option>none</option>
-            <option>toggle</option>
-            <option>lockout</option>
-            <option>momentary</option>
-        </select>
-    </div>
-    <div class="form-row">
-        <label for="node-input-inputRelayRelationship7">Input/Relay Relationship 7</label>
-        <select id="node-input-inputRelayRelationship7" >
-            <option value="">DoNotSet</option>
-            <option>none</option>
-            <option>toggle</option>
-            <option>lockout</option>
-            <option>momentary</option>
-        </select>
-    </div>
-    <div class="form-row">
-        <label for="node-input-inputRelayRelationship8">Input/Relay Relationship 8</label>
-        <select id="node-input-inputRelayRelationship8" >
-            <option value="">DoNotSet</option>
-            <option>none</option>
-            <option>toggle</option>
-            <option>lockout</option>
-            <option>momentary</option>
-        </select>
-    </div>
-    <div class="form-row">
-        <label for="node-input-inputRelayRelationship9">Input/Relay Relationship 9</label>
-        <select id="node-input-inputRelayRelationship9" >
-            <option value="">DoNotSet</option>
-            <option>none</option>
-            <option>toggle</option>
-            <option>lockout</option>
-            <option>momentary</option>
-        </select>
-    </div>
-    <div class="form-row">
-        <label for="node-input-inputRelayRelationship10">Input/Relay Relationship 10</label>
-        <select id="node-input-inputRelayRelationship10" >
-            <option value="">DoNotSet</option>
-            <option>none</option>
-            <option>toggle</option>
-            <option>lockout</option>
-            <option>momentary</option>
-        </select>
-    </div>
-    <div class="form-row">
-        <label for="node-input-inputRelayRelationship11">Input/Relay Relationship 11</label>
-        <select id="node-input-inputRelayRelationship11" >
-            <option value="">DoNotSet</option>
-            <option>none</option>
-            <option>toggle</option>
-            <option>lockout</option>
-            <option>momentary</option>
-        </select>
-    </div>
+
 
 </script>
 
@@ -161,18 +52,7 @@
             pollInterval: {value:1000},
             boardAddress: {value: 1},
             numberOfInputs: {value: 12},
-            inputRelayRelationship0:{value:''},
-            inputRelayRelationship1:{value:''},
-            inputRelayRelationship2:{value:''},
-            inputRelayRelationship3:{value:''},
-            inputRelayRelationship4:{value:''},
-            inputRelayRelationship5:{value:''},
-            inputRelayRelationship6:{value:''},
-            inputRelayRelationship7:{value:''},
-            inputRelayRelationship8:{value:''},
-            inputRelayRelationship9:{value:''},
-            inputRelayRelationship10:{value:''},
-            inputRelayRelationship11:{value:''},
+            inputRelationship:{value:'self'},
             modbusInterface: {value:"", type:"bs-modbus-interface"},
         },
         inputs:1,               // set the number of inputs - only 0 or 1

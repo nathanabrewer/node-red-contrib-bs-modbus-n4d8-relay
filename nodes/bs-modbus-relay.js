@@ -21,13 +21,10 @@ module.exports = function(RED) {
         let numberOfInputs = parseInt(config.numberOfInputs)
         let board = relayHelper.addBoard(config.boardAddress, pollInterval, numberOfInputs)
 
-        for(let i = 0; i < numberOfInputs; i++){
-            let inputRelayRelationship = config['inputRelayRelationship'+i]
-            if(typeof inputRelayRelationship !== 'undefined' && inputRelayRelationship != ''){
-                board.setInterlock(i, inputRelayRelationship)
-            }
-        }
-
+        setTimeout(()=>{
+            board.setInterlock(config.inputRelationship)
+        }, 1000)
+        
         board.on("INPUT_UPDATE", (data) => {
             node.status({
                 text: data.join(",")
