@@ -2,10 +2,12 @@
 const BsRelayBoard = require('../src/BsRelayBoard.class.js')
 const { SerialPort } = require('serialport')
 const { InterByteTimeoutParser } = require('@serialport/parser-inter-byte-timeout')
+const EventEmitter = require('events');
 
-class BsRelayHelper {
+class BsRelayHelper extends EventEmitter {
 
     constructor(serialPort, baud){
+        super()
         this.portAddress = serialPort
         this.baudRate = baud
         this.write_success = 0
@@ -65,14 +67,26 @@ class BsRelayHelper {
             return;
         }
 
-        let dataPart = data.slice(0, data.length-2)
+        let dataLessCrc = data.slice(0, data.length-2)
         let a = data.slice(data.length-2, data.length)
-        let b = this.makeCRC16(dataPart)
+        let b = this.makeCRC16(dataLessCrc)
 
         let crcOK = (a[0] == b[0] && a[1] == b[1])
 
-        let crcMatchText = crcOK ? "CRC-OK" : "CRC-FAILED"
+        let addressByte = dataLessCrc[0]
+        let functionByte = dataLessCrc[1]
+        let dataBytes = dataLessCrc.slice(3, data.length - 3)
 
+        this.emit(`RX`, {
+            crc: crcOK,
+            address: addressByte,
+            function: functionByte,
+            data: dataBytes
+        })
+
+
+
+        let crcMatchText = crcOK ? "CRC-OK" : "CRC-FAILED"
         console.log("Rx ",crcMatchText, data)
 
         let address = data[0]

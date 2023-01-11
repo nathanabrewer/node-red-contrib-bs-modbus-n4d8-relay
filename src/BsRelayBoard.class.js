@@ -15,6 +15,14 @@ class BsRelayBoard  extends EventEmitter {
             }, intervalTime)
         }
 
+        this.relayHelper.on("Rx", function(rxEvent){
+
+            if(rxEvent.address == this.address && rxEvent.crc){
+                this.handleFunctionResponse(rxEvent.function, rxEvent.data)
+            }
+
+        })
+
     }
 
     poll() {
@@ -106,11 +114,59 @@ class BsRelayBoard  extends EventEmitter {
         return this.sendWithCrc(buffer)
     }
 
+    handleFunctionResponse(functionCode, data){
 
-    saveReadRelayStates(data) {
-        if(typeof this.numberOfInputs !== 'undefined'){
-            data = data.slice(0,this.numberOfInputs)
+        //Read Multiple Holding Registers Response
+        if(functionCode == 0x3){
+            if(data[0] == 0x18){
+                var inputValues = data.slice(1, data.length - 1)
+                return this.saveReadRelayStates(inputValues)
+            }
         }
+
+        //Write Single Holding Register Response
+        /*             []Address
+                          []Function
+                             [- -]Register Address  uint16
+                                   [- -]Written value uint16
+            Tx <Buffer 01 06 00 0c 05 10 4b 55>
+            Rx <Buffer 01 06 00 0c 05 10 4b 55>
+        */
+        if(functionCode == 0x6) {
+            let writeSingleSuccess = {
+                register: data[0] << 8 | data[1] ,
+                value: data[2] << 8 | data[2]
+            }
+
+            this.emit("WRITE_SINGLE_SUCCESS", writeSingleSuccess)
+            console.log('writeSingleSuccess', writeSingleSuccess)
+
+            return
+        }
+
+        console.log("Unhandled Response", functionCode, data)
+
+
+        // if(data[1] == 0x3 && data[2] == 0x18){
+        //     let length = data.length - 4
+        //     let responseData = data.slice(4, length)
+        //     return this.handleInputStates(address, responseData)
+        // }
+
+    }
+
+    saveReadRelayStates(d) {
+        if(typeof this.numberOfInputs !== 'undefined'){
+            d = d.slice(0,this.numberOfInputs*2)
+        }
+
+        let data = []
+        for(let i = 0; i < this.numberOfInputs; i++){
+            let pos = (i*2)+1
+            data.push(d[pos]);
+        }
+        console.log(data)
+
 
         for(let i = 0; i < this.numberOfInputs; i++){
             if(this.relay_states[i] != data[i]){

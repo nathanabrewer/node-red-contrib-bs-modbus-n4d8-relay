@@ -24,7 +24,7 @@ module.exports = function(RED) {
         setTimeout(()=>{
             board.setInterlock(config.inputRelationship)
         }, 1000)
-        
+
         board.on("INPUT_UPDATE", (data) => {
             node.status({
                 text: data.join(",")
