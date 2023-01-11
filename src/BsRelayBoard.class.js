@@ -16,7 +16,7 @@ class BsRelayBoard  extends EventEmitter {
         }
 
         this.relayHelper.on("Rx", function(rxEvent){
-
+            console.log("this.relayHelper.on", rxEvent)
             if(rxEvent.address == this.address && rxEvent.crc){
                 this.handleFunctionResponse(rxEvent.function, rxEvent.data)
             }
@@ -116,6 +116,7 @@ class BsRelayBoard  extends EventEmitter {
 
     handleFunctionResponse(functionCode, data){
 
+        console.log("handleFunctionResponse", functionCode, data)
         //Read Multiple Holding Registers Response
         if(functionCode == 0x3){
             if(data[0] == 0x18){
