@@ -70,8 +70,7 @@ class BsRelayBoard  extends EventEmitter {
         request.push(delay & 0xFF)
 
         var buffer = Buffer.from(request);
-        return this.sendWithCrc(buffer)
-
+        
         let self = this
         return this.timeout(
             1000,
