@@ -70,7 +70,7 @@ class BsRelayBoard  extends EventEmitter {
         request.push(delay & 0xFF)
 
         var buffer = Buffer.from(request);
-        
+
         let self = this
         return this.timeout(
             1000,
@@ -140,7 +140,7 @@ class BsRelayBoard  extends EventEmitter {
         //Read Multiple Holding Registers Response
         if(functionCode == 0x3){
             if(data[0] == 0x18){
-                var inputValues = data.slice(1, data.length - 1)
+                var inputValues = data.slice(1)
                 return this.saveReadRelayStates(inputValues)
             }
         }
