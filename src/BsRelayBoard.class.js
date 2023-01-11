@@ -15,8 +15,8 @@ class BsRelayBoard  extends EventEmitter {
             }, intervalTime)
         }
 
-        this.relayHelper.on("Rx", function(rxEvent){
-            console.log("this.relayHelper.on", rxEvent)
+        this.relayHelper.on("Rx", (rxEvent) => {
+
             if(rxEvent.address == this.address && rxEvent.crc){
                 this.handleFunctionResponse(rxEvent.function, rxEvent.data)
             }
@@ -41,9 +41,17 @@ class BsRelayBoard  extends EventEmitter {
         return this.relayHelper.sendWithCrc(buffer)
     }
 
-    setRelay(relayAddress, targetState, delay) {
-        console.log({ text: "Relay: " + relayAddress + ", Delay: " + delay });
+    timeout(time, prom) {
+        let timer;
+        return Promise.race([
+            prom,
+            new Promise((_r, rej) => timer = setTimeout(rej, time))
+        ]).finally(() => clearTimeout(timer));
+    }
 
+    setRelay(relayAddress, targetState, delay) {
+
+        console.log({ text: "Relay: " + relayAddress + ", Delay: " + delay });
         var request = [
             this.address,               // address, make sure it fits 0xFF mask
             0x06,                       // Modbus Function 06
@@ -63,6 +71,19 @@ class BsRelayBoard  extends EventEmitter {
 
         var buffer = Buffer.from(request);
         return this.sendWithCrc(buffer)
+
+        let self = this
+        return this.timeout(
+            1000,
+            new Promise( (resolve, reject) => {
+                self.on("WRITE_SINGLE_SUCCESS", (d) => {
+                    console.log("PROMISE IS ALIVE!!!", d)
+                    self.removeAllListeners("WRITE_SINGLE_SUCCESS")
+                    resolve()
+                })
+                this.sendWithCrc(buffer)
+            })
+        )
     }
 
     readInput(pin) {

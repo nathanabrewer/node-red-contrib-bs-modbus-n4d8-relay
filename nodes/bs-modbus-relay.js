@@ -42,7 +42,15 @@ module.exports = function(RED) {
 
             switch(msg.topic) {
                 case "MOMENT":
-                    board.setRelay(msg.payload, "MOMENT", 0x10)
+                    board.setRelay(msg.payload, "MOMENT", 0x10).then(result => {
+                        msg.resultMessage = result
+                        msg.success = true
+                        node.send(msg)
+                    }).catch(err => {
+                        msg.success = false
+                        msg.resultErr = err
+                        node.send(msg)
+                    })
                     break;
 
                 case "READ":
@@ -50,11 +58,27 @@ module.exports = function(RED) {
                     break;
 
                 case "ON":
-                    board.setRelay(msg.payload, true)
+                    board.setRelay(msg.payload, true).then(result => {
+                        msg.resultMessage = result
+                        msg.success = true
+                        node.send(msg)
+                    }).catch(err => {
+                        msg.success = false
+                        msg.resultErr = err
+                        node.send(msg)
+                    })
                     break;
 
                 case "OFF":
-                    board.setRelay(msg.payload, false)
+                    board.setRelay(msg.payload, false).then(result => {
+                        msg.resultMessage = result
+                        msg.success = true
+                        node.send(msg)
+                    }).catch(err => {
+                        msg.success = false
+                        msg.resultErr = err
+                        node.send(msg)
+                    })
                     break;
 
                 default:

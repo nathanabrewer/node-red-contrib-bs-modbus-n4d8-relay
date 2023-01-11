@@ -75,39 +75,15 @@ class BsRelayHelper extends EventEmitter {
 
         let addressByte = dataLessCrc[0]
         let functionByte = dataLessCrc[1]
-        let dataBytes = dataLessCrc.slice(3, data.length - 3)
+        let dataBytes = dataLessCrc.slice(2)
 
-        this.emit(`RX`, {
+        this.emit(`Rx`, {
             crc: crcOK,
             address: addressByte,
             function: functionByte,
             data: dataBytes
         })
 
-
-
-        let crcMatchText = crcOK ? "CRC-OK" : "CRC-FAILED"
-        console.log("Rx ",crcMatchText, data)
-
-        let address = data[0]
-        //if this is 0x3 and 0x18 then it is a response to input state query
-
-        if(!crcOK){
-            //Do not continue processing bad data, CRC has failed!
-            return
-        }
-
-        if(data[1] == 0x3 && data[2] == 0x18){
-            let length = data.length - 4
-            let responseData = data.slice(4, length)
-            return this.handleInputStates(address, responseData)
-        }
-
-    }
-
-    handleInputStates(address, inputs){
-
-        this.relayBoards[address].saveReadRelayStates(inputs)
     }
 
     addBoard(address, pollInterval, numberOfInputs) {
